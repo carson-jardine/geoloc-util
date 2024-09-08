@@ -7,23 +7,28 @@ This command-line utility fetches geolocation data (latitude, longitude, place n
 ## Setup
 
 1. Clone the repository:
+
    To get started, clone the repository to your local machine and navigate into the project directory:
 
    ```
     git clone <git@github.com:carson-jardine/geoloc-util.git>
+
     cd geoloc-util
    ```
 
 2. Install dependencies:
-   Install the required Node.js dependencies. This project uses:
-   - Axios for making HTTP requests to the OpenWeather Geocoding API.
-   - dotenv for securely managing environment variables.
-   - jest for testing.
 
-Run the following command to install dependencies:
-`npm install`
+   This project uses:
 
-3. Add your API Key
+   - **Axios** for making HTTP requests to the OpenWeather Geocoding API.
+   - **Dotenv** for securely managing environment variables.
+   - **Jest** for testing.
+
+   Run the following command to install dependencies:
+   `npm install`
+
+3. Add your API Key:
+
    You will need an OpenWeather API key to fetch geolocation data. If you do not already have one, sign up for a free API key [here](https://home.openweathermap.org/users/sign_up).
 
    After obtaining your API key:
@@ -46,7 +51,9 @@ Run the following command to install dependencies:
    `npm run coverage`
 
 5. Run the utility:
+
    To run the utility from the command line, use the following format:
+
    `node lib/geoloc-util.js "{locationInfo}"`
 
    For example:
