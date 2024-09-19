@@ -6,29 +6,41 @@ jest.mock('../lib/geoloc-util-helper', () => ({
     }));
 
 describe('Geolocation Integration Tests', () => {
-    test('it should fetch location data by city and state', async () => {
-        const city = 'Madison';
-        const state = 'WI';
+    describe('Get Location By...Tests', () => {
+        test('it should fetch location data by city and state', async () => {
+            const city = 'Madison';
+            const state = 'WI';
 
-        const result = await getLocationByCity(city, state);
-        
-        expect(result).toBeDefined();
-        expect(result.name).toBe('Madison');
-        expect(result.state).toBe('Wisconsin');
-        expect(result).toHaveProperty('lat');
-        expect(result).toHaveProperty('lon');
-    });
+            const result = await getLocationByCity(city, state);
+            
+            expect(result).toBeDefined();
+            expect(result.name).toBe('Madison');
+            expect(result.state).toBe('Wisconsin');
+            expect(result).toHaveProperty('lat');
+            expect(result).toHaveProperty('lon');
+        });
 
-    test('it should fetch location data by zipcode', async () => {
-        const zipcode = '90210'
+        test('it should fetch location data by zipcode', async () => {
+            const zipcode = '90210'
 
-        const result = await getLocationByZipcode(zipcode);
+            const result = await getLocationByZipcode(zipcode);
 
-        expect(result).toBeDefined();
-        expect(result.name).toBe('Beverly Hills');
-        expect(result).toHaveProperty('lat');
-        expect(result).toHaveProperty('lon');
-    });
+            expect(result).toBeDefined();
+            expect(result.name).toBe('Beverly Hills');
+            expect(result).toHaveProperty('lat');
+            expect(result).toHaveProperty('lon');
+        });
+
+        test('it should be able to handle special chrs in city and state', async () => {
+            const city = "Martha's Vineyard";
+            const state = 'MA';
+
+            const result = await getLocationByCity(city, state);
+            
+            expect(result).toBeDefined();
+            expect(result.name).toBe("Martha's Vineyard");
+        });
+    }),
 
     describe('multipleLocationSearch Tests', () => {
         test('it should fetch data for multiple locations', async () => {
@@ -53,6 +65,37 @@ describe('Geolocation Integration Tests', () => {
                         name: 'Denver',
                         lat: expect.any(Number),
                         lon: expect.any(Number),
+                    })
+                ])
+            )
+        });
+
+        test('it should fetch data for all US territories', async () => {
+            const locations = [
+                'Washington, DC',
+                'San Juan, PR',
+                'Cruz Bay, VI',
+                'Tamuning, GU',
+                'Pago Pago, AS',
+                'Capitol Hill, MP',
+            ];
+
+            const results = await multipleLocationSearch(locations)
+            
+            expect(results.length).toBe(6);
+            expect(results).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({
+                        name: 'Washington',
+                        state: 'District of Columbia',
+                    }),
+                    expect.objectContaining({
+                        name: 'San Juan',
+                        state: 'Puerto Rico',
+                    }),
+                    expect.objectContaining({
+                        name: 'Cruz Bay',
+                        state: 'United States Virgin Islands'
                     })
                 ])
             )
@@ -102,6 +145,7 @@ describe('Geolocation Integration Tests', () => {
             );
         });
     });
+
     describe('API Key Check', () => {   
         test('it should throw an error if the API key is missing', async () => {
             delete process.env.OPENWEATHER_API_KEY;
